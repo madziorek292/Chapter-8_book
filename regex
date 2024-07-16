@@ -1,0 +1,52 @@
+#Wyjaśnienie:
+#Funkcja regex_strip(text, chars=None):
+
+#Przyjmuje dwa parametry: text (tekst do wyczyszczenia) i chars (opcjonalne znaki do usunięcia).
+#Jeśli chars jest None:
+
+#Używa re.sub() do zastąpienia białych znaków (\s) na początku (^\s+) i końcu (\s+$) tekstu pustym łańcuchem ('').
+#Jeśli chars jest podany:
+
+#Używa re.escape(chars) do uniknięcia interpretacji specjalnych znaków w chars jako części wzorca regex.
+#Tworzy wzorzec regex (pattern), który dopasowuje jedno lub więcej wystąpień (+) znaków z chars na początku (^[...]) lub końcu ([...]$) tekstu.
+#Używa re.sub() do zastąpienia dopasowań pustym łańcuchem ('').
+#Przykład użycia:
+
+#text1 jest oczyszczany z białych znaków na początku i końcu.
+#text2 jest oczyszczany z gwiazdek (*) na początku i końcu.
+#Kluczowe punkty:
+#re.sub() służy do zastępowania na podstawie wzorców regex.
+#re.escape() zapewnia, że specjalne znaki w chars są traktowane literalnie w wzorcu regex.
+#Funkcja obsługuje oba opisane scenariusze (oczyszczanie białych znaków i oczyszczanie określonych znaków).
+#Ta implementacja zapewnia elastyczny sposób usuwania znaków z początku i końca tekstu przy użyciu wyrażeń regularnych, podobnie jak wbudowana metoda strip() w Pythonie.
+
+
+#Funkcja re.sub() z modułu re w Pythonie służy do zastępowania fragmentów tekstu pasujących do wzorca wyrażenia regularnego innym tekstem. Jest to bardzo użyteczne narzędzie do przetwarzania i manipulowania tekstami na podstawie określonych reguł.
+
+#Składnia
+#python
+#Skopiuj kod
+#re.sub(pattern, repl, string, count=0, flags=0)
+#pattern: Wzorzec wyrażenia regularnego do dopasowania w tekście.
+#repl: Ciąg znaków lub funkcja, która zostanie użyta do zastąpienia dopasowanych fragmentów.
+#string: Łańcuch znaków, w którym chcemy przeprowadzić operację zastępowania.
+#count (opcjonalnie): Maksymalna liczba wystąpień do zastąpienia. Domyślnie wszystkie wystąpienia są zastępowane.
+#flags (opcjonalnie): Dodatkowe flagi modyfikujące zachowanie operacji.
+
+import re
+
+def regex_strip(text, chars=None):
+    if chars is None:
+        return re.sub(r'^\s+|\s+$', '', text)
+    
+    return re.sub(f'^[{re.escape(chars)}]+|[{re.escape(chars)}]+$', '', text)
+
+# Przykład użycia:
+text1 = "   Witaj, Świecie!   "
+text2 = "***Witaj, Świecie!***"
+
+# Testowanie bez dodatkowych znaków
+print(regex_strip(text1))  # Wynik: "Witaj, Świecie!"
+
+# Testowanie z określonymi znakami
+print(regex_strip(text2, "*"))  # Wynik: "Witaj, Świecie!"
