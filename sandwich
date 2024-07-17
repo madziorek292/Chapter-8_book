@@ -1,0 +1,56 @@
+#Wyjaśnienie:
+#Ceny składników: Na początku programu zdefiniowane są ceny dla poszczególnych składników w słowniku prices.
+#Funkcja calculate_cost: Ta funkcja oblicza koszt kanapki na podstawie wybranych składników.
+#Pobieranie preferencji użytkownika: Program używa funkcji pyinputplus do uzyskania preferencji użytkownika dotyczących pieczywa, białka, sera oraz dodatków. Odpowiednie funkcje to inputMenu() i inputYesNo().
+#Ilość kanapek: Użytkownik jest pytany o liczbę kanapek za pomocą inputInt(), z wymuszeniem liczby 1 lub większej.
+#Obliczanie całkowitego kosztu: Na końcu program oblicza całkowity koszt zamówienia i wyświetla wynik użytkownikowi.
+#Ten program zapewnia interaktywne tworzenie kanapki z wykorzystaniem biblioteki PyInputPlus do walidacji danych wejściowych, co gwarantuje, że użytkownik wprowadza poprawne wartości.
+
+
+import pyinputplus as pyip
+
+# Ceny poszczególnych składników
+prices = {
+    'bread': {'wheat': 1.0, 'white': 1.0, 'sourdough': 1.5},
+    'protein': {'chicken': 1.5, 'turkey': 1.5, 'ham': 1.5, 'tofu': 1.0},
+    'cheese': {'cheddar': 0.5, 'swiss': 0.5, 'mozzarella': 0.5},
+    'extras': {'mayo': 0.1, 'mustard': 0.1, 'lettuce': 0.2, 'tomato': 0.2}
+}
+
+# Funkcja obliczająca koszt kanapki
+def calculate_cost(bread, protein, cheese=None, extras=None):
+    total_cost = prices['bread'][bread] + prices['protein'][protein]
+    if cheese:
+        total_cost += prices['cheese'][cheese]
+    if extras:
+        for extra in extras:
+            total_cost += prices['extras'][extra]
+    return total_cost
+
+# Pobieranie preferencji użytkownika
+bread = pyip.inputMenu(['wheat', 'white', 'sourdough'], prompt="Wybierz rodzaj pieczywa:\n")
+protein = pyip.inputMenu(['chicken', 'turkey', 'ham', 'tofu'], prompt="Wybierz rodzaj białka:\n")
+
+cheese_choice = pyip.inputYesNo("Czy chcesz ser? (tak/nie)\n")
+cheese = None
+if cheese_choice == 'yes':
+    cheese = pyip.inputMenu(['cheddar', 'swiss', 'mozzarella'], prompt="Wybierz rodzaj sera:\n")
+
+extras_choice = pyip.inputYesNo("Czy chcesz dodatki takie jak mayo, musztarda, sałata, pomidor? (tak/nie)\n")
+extras = []
+if extras_choice == 'yes':
+    if pyip.inputYesNo("Czy chcesz majonez? (tak/nie)\n") == 'yes':
+        extras.append('mayo')
+    if pyip.inputYesNo("Czy chcesz musztardę? (tak/nie)\n") == 'yes':
+        extras.append('mustard')
+    if pyip.inputYesNo("Czy chcesz sałatę? (tak/nie)\n") == 'yes':
+        extras.append('lettuce')
+    if pyip.inputYesNo("Czy chcesz pomidor? (tak/nie)\n") == 'yes':
+        extras.append('tomato')
+
+num_sandwiches = pyip.inputInt("Ile kanapek chcesz? (1 lub więcej)\n", min=1)
+
+# Obliczanie całkowitego kosztu
+total_cost = calculate_cost(bread, protein, cheese, extras) * num_sandwiches
+
+print(f"Całkowity koszt twojego zamówienia to: ${total_cost:.2f}")
